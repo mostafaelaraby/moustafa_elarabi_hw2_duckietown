@@ -51,7 +51,7 @@ class PurePursuitNode(object):
         self.data_history_semaphore = threading.Semaphore()
         self.data_history = []
         rospy.on_shutdown(self.onShutdown)
-        self.loginfo('Node initialized')
+        self.loginfo('Pure Pursuit Node initialized')
         
     def control_car_cmd(self,event):
         """
