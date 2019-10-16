@@ -1,0 +1,22 @@
+description: |
+    Note: pure pursuit lane following
+parameters:
+
+
+publishers:
+    car_cmd:
+        topic: ~car_cmd
+        type: duckietown_msgs/Twist2DStamped
+        queue_size: 1
+
+subscriptions:
+    lane_pose:
+        topic: ~lane_pose
+        type: duckietown_msgs/LanePose
+        queue_size: 1
+    seglist_filtered:
+        topic: ~seglist_filtered
+        type: duckietown_msgs/SegmentList
+        queue_size: 1
+
+contracts: {}

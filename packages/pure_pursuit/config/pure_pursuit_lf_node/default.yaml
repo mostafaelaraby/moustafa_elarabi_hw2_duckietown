@@ -1,0 +1,6 @@
+#pure_pursuit/pure_pursuit_lf_node
+lookahead_dist: 0.3
+buffer_segment_points: 10
+max_speed: 0.32
+update_interval: 0.1
+distance_offset: 0.1

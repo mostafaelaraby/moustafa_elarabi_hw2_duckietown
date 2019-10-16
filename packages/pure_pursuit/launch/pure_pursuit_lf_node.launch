@@ -1,0 +1,12 @@
+<launch>
+	<arg name="veh"/>
+	<arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman"/>
+	<arg name="pkg_name" default="pure_pursuit" doc="name of the package"/>
+	<arg name="node_name" default="pure_pursuit_lf_node" doc="name of the node"/>
+
+    <group ns="$(arg veh)">
+	    <node  pkg="$(arg pkg_name)" type="$(arg node_name).py" name="$(arg node_name)" output="screen" required="true">
+	        <rosparam command="load" file="$(find pure_pursuit)/config/$(arg node_name)/$(arg param_file_name).yaml"/>
+	    </node>
+	</group>
+</launch>
