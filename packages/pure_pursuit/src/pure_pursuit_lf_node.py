@@ -47,6 +47,9 @@ class PurePursuitNode(object):
 
         self.segments_semaphore =  threading.Semaphore() # used to avoid having multiple threads extending the same list of segments at the same time
         self.header = None
+        self.current_pose_message = None
+        self.data_history_semaphore = threading.Semaphore()
+        self.data_history = []
         rospy.on_shutdown(self.onShutdown)
         self.loginfo('Node initialized')
         
@@ -124,9 +127,21 @@ class PurePursuitNode(object):
         car_cmd_message.v = v
         car_cmd_message.omega = w
         self.publishing_car_cmd.publish(car_cmd_message)
+        # storing command
+        self.store_history(v, w)
+    
+    def store_history(self, v, w):
+        # used to store current linear and angular velocities for plotting later
+        if self.current_pose_message is not None:
+            self.data_history_semaphore.acquire()
+            angle_error = self.current_pose_message.phi
+            crosstrack_error = self.current_pose_message.d
+            self.data_history.append([str(v), str(w), str(crosstrack_error), str(angle_error)])
+            self.data_history_semaphore.release()
 
     def handle_pose(self, pose_msg):
         self.header = pose_msg.header
+        self.current_pose_message = pose_msg
 
     def adding_new_segments(self, inlier_segments_msg):
         self.header = inlier_segments_msg.header
@@ -142,13 +157,20 @@ class PurePursuitNode(object):
                 self.segment_points[color] = segment.points
             self.segments_semaphore.release() # releasing semaphore for others to use it
        
-    def onShutdown(self):
+    def onShutdown(self):        
+        # saving list of data points into a file for plotting 
+        self.loginfo('###############################')
+        self.loginfo('\t'.join(['V', 'W', 'Cross track', 'Angle Error']))
+        for p in self.data_history:
+            self.loginfo('\t'.join(p))
+        self.loginfo('###############################')
         self.loginfo('Pure Pusuit Lane Following shutting down')
         rospy.loginfo("[LaneFilterNode] Shutdown.")
 
         # Stop listening
         self.sub_lane_pose.unregister()
         self.sub_seglist_filtered.unregister()
+
 
         # Send stop command
         self.publish_car_speed_omega(0.0,0.0)
