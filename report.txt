@@ -1,0 +1,11 @@
+## Package Repo
+https://github.com/mostafaelaraby/moustafa_elarabi_hw2_duckietown
+
+## Docker image name
+mostafaelaraby/moustafa_elarabi_hw2_duckietown
+
+## Docker image link 
+https://hub.docker.com/r/mostafaelaraby/moustafa_elarabi_hw2_duckietown
+
+## Time to complete a full lab
+it took 2 minutes to run in duckietown lab and it managed to finish the whole trak as shown in the video
